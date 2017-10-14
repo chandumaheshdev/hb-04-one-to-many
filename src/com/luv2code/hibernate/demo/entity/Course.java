@@ -40,8 +40,11 @@ public class Course {
 	@ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE,
 						 CascadeType.DETACH, CascadeType.REFRESH})
 	@JoinColumn(name="instructor_id")
+	
 	private Instructor instructor;
+	
 	@OneToMany(fetch=FetchType.LAZY,cascade=CascadeType.ALL)
+	
 	@JoinColumn(name="course_id")
 	private List<Review> reviews;
 	
