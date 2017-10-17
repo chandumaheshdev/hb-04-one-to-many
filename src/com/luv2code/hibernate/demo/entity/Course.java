@@ -11,6 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -40,13 +42,22 @@ public class Course {
 	@ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE,
 						 CascadeType.DETACH, CascadeType.REFRESH})
 	@JoinColumn(name="instructor_id")
-	
 	private Instructor instructor;
 	
-	@OneToMany(fetch=FetchType.LAZY,cascade=CascadeType.ALL)
-	
+	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name="course_id")
 	private List<Review> reviews;
+		
+	@ManyToMany(fetch=FetchType.LAZY,
+			cascade= {CascadeType.PERSIST, CascadeType.MERGE,
+			 CascadeType.DETACH, CascadeType.REFRESH})
+	@JoinTable(
+			name="course_student",
+			joinColumns=@JoinColumn(name="course_id"),
+			inverseJoinColumns=@JoinColumn(name="student_id")
+			)
+	private List<Student> students;
+	
 	
 	public Course() {
 		
@@ -79,7 +90,7 @@ public class Course {
 	public void setInstructor(Instructor instructor) {
 		this.instructor = instructor;
 	}
-	
+
 	public List<Review> getReviews() {
 		return reviews;
 	}
@@ -87,17 +98,36 @@ public class Course {
 	public void setReviews(List<Review> reviews) {
 		this.reviews = reviews;
 	}
-	// add a convinience method
-	public void addReview(Review theReview){
-		
-		if(reviews==null){
-			reviews=new ArrayList<>();
-		}
+
+	// add a convenience method
 	
-		reviews.add(theReview);	
+	public void addReview(Review theReview) {
+	
+		if (reviews == null) {
+			reviews = new ArrayList<>();
+		}
+		
+		reviews.add(theReview);
 	}
 	
+	public List<Student> getStudents() {
+		return students;
+	}
+
+	public void setStudents(List<Student> students) {
+		this.students = students;
+	}
+
+	// add a convenience method
 	
+	public void addStudent(Student theStudent) {
+		
+		if (students == null) {
+			students = new ArrayList<>();
+		}
+		
+		students.add(theStudent);
+	}
 	
 	@Override
 	public String toString() {
@@ -106,3 +136,6 @@ public class Course {
 	
 	
 }
+
+
+
